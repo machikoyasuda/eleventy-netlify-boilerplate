@@ -7,32 +7,20 @@
   </head>
   <body>
     <!-- Include the script that builds the page and powers Netlify CMS -->
-    <!-- <script src="https://unpkg.com/netlify-cms@^2.0.0/dist/netlify-cms.js"></script> -->
+    <script src="https://unpkg.com/netlify-cms@^2.0.0/dist/netlify-cms.js"></script>
     <!-- Include Netlify Identity for authentication -->
-    <!-- <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script> -->
-
-    <!-- Make sure to include Nelify's authentiation library -->
-    <!-- Also available via npm as netlify-auth-providers -->
-    <script src="https://unpkg.com/netlify-auth-providers"></script>
-    <!-- <script type="module" src="/admin/preview-templates/index.js"></script> -->
-
-    <h1>GitHub Auth Demo:</h1>
-    <p><a href="#" id="login">Authenticate</a></p>
-    <p id="output"></p>
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    <script type="module" src="/admin/preview-templates/index.js"></script>
     <script>
-      const anchorTag = document.getElementById('login')
-      const outputText = document.getElementById('output')
-  
-      anchorTag.addEventListener('click', (e) => {
-        e.preventDefault()
-  
-        const authenticator = new netlify.default ({})
-  
-        authenticator.authenticate({provider:"github", scope: "user"}, (err, data) => {
-          err ? outputText.innerText = "Error Authenticating with GitHub: " + err : 
-          outputText.innerText = "Authenticated with GitHub. Access Token: " + data.token
-        })
-      })
+      if (window.netlifyIdentity) {
+        window.netlifyIdentity.on("init", user => {
+          if (!user) {
+            window.netlifyIdentity.on("login", () => {
+              document.location.href = "/admin/";
+            });
+          }
+        });
+      }
     </script>
   </body>
 </html>
